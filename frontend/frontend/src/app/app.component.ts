@@ -30,7 +30,6 @@ export class AppComponent {
   get_temperatura(){
     this.socket.getMessages().subscribe(data =>{
       this.tempera = data;
-
     });
     
   }

@@ -5,7 +5,6 @@ let server = require('http').Server(app);
 var io = require('socket.io')(server);
 var d = require('./controllers/termomether');
 
-
 io.on('connection', function (socket) {
 
     socket.on('new_message', function (data) {

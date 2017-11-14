@@ -5,33 +5,37 @@ var board = require('../board');
 var express = require('express');
 var socket_io = require('../app');
 var socket = socket_io.io;
-
+var hygrometer;
 var temperatura = "";
 
-board.on('ready', function () {
-    
-    temperatura = new five.Temperature({ 
-        controller:'dth11',
-        pin: 'A0',
-        type: 'analog',
-        freq: 2000
+board.on("ready", function () {
+
+    hygrometer = new five.Thermometer({
+        controller: 'DHT11',
+        pin: "A0"
     });
-})
+});
+
+
+
 
 function temperature(collback) {
-
-    temperatura.on('data', (data)=>{
-       
-        board.samplingInterval(1000);
-        console.log(data);
-        var t = 0;
-         t = data.celsius.toString();
-        
-        return collback(t.substring(0,2) + "°C");
+    hygrometer.on("change", function (data) {
+    
+        board.loop(100, ()=>{
+            console.log("temperature");
+            console.log("  celsius           : ", this.celsius);
+            console.log("  fahrenheit        : ", this.fahrenheit);
+            console.log("  kelvin            : ", this.kelvin);
+            console.log("--------------------------------------");
+        })
+        var t = data.celsius;
+        return collback(t);
     });
+
 }
 
 module.exports = {
-    temperature:temperature
+    temperature: temperature
 }
 
